@@ -5,3 +5,5 @@
 <svelte:head>
     <title></title>
 </svelte:head>
+
+<h1>Display Window</h1>

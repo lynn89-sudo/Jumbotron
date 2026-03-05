@@ -11,4 +11,8 @@
 
 <h2>Other pages</h2>
 <p>{"/[city]/control"}</p>
+<p>{"/[city]/control/guide"}</p>
 <p>{"/[city]/display"}</p>
+
+<h2>Testing</h2>
+<p><a href={base+"/nyc/control"}>Control Window</a></p>

@@ -1,4 +1,4 @@
-export let eventName = "Campfire"
+export let eventName = "Campfire" // Used to change the name of the Satellite event across Jumbotron and to make updating the UI between events easier
 
 export function proccessCity(name) {
     name = name.trim();
@@ -25,4 +25,19 @@ export function proccessCity(name) {
             return rtn;
         }
     }
+}
+
+export function proccessEventCity(name) {
+    return eventName + " " + proccessCity(name);
+}
+
+export async function checkCity(name) {
+    let rawData = await fetch("https://raw.githubusercontent.com/lynn89-eefje/jumbotron-events/refs/heads/main/data.json");
+    let data = await rawData.json();
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].eventName == name) {
+            return true;
+        }
+    }
+    return false;
 }
