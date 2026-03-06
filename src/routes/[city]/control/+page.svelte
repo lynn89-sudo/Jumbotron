@@ -10,6 +10,7 @@
 
     import MainConfig from "$lib/configs/main.svelte";
     import AnnouncementConfig from "$lib/configs/announcements.svelte";
+    import Slides from "$lib/configs/slides.svelte";
     import { sync } from "$lib/sync.svelte";
 
     onMount(async function() {
@@ -64,7 +65,7 @@
         bottom: 10px;
     }
 </style>
-<div id="syncingNotif" class:active={sync.enabled || sync.announcements}>
+<div id="syncingNotif" class:active={sync.enabled || sync.announcements || sync.slides}>
     <p>Your display windows are syncing. Hang tight!</p>
 </div>
 <h1>{proccessEventCity(page.params.city)}</h1>
@@ -81,7 +82,7 @@
 </div>
 <div id="presentations" class="config">
     <h3>Presentations</h3>
-    <p>Seamlessly display a Google Slides or a PDF to your audience.</p>
+    <Slides />
 </div>
 <div id="timer" class="config">
     <h3>Timers</h3>

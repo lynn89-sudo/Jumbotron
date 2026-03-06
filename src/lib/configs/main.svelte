@@ -6,7 +6,8 @@
     import { sync } from "$lib/sync.svelte.js";
 
     onMount(function() {
-       localStorage.setItem("jumbotron.sync", false);
+       setTimeout(function() {localStorage.setItem("jumbotron.sync", true);}, 1000);
+       setTimeout(function() {localStorage.setItem("jumbotron.sync", false);}, 2000);
     })
 
     function openDisplay() {
@@ -23,11 +24,11 @@
     button {
         background-color: rgb(92, 89, 89);
     }
-    button.disabled {
-        cursor: progress;
-    }
 </style>
 <h4>Display Windows</h4>
 <p>Display windows should be moved to another screen. Once you are done making changes from this window, you can use the button below to sync all changes.</p>
-<p><button onclick={openDisplay}>Open New Display Window</button><button onclick={syncDisplay} id="sync" class:disabled={sync.enabled == true}>Sync All Changes to Display Windows</button></p>
+<p><button onclick={openDisplay}>Open New Display Window</button><!--<button onclick={syncDisplay} id="sync" class:disabled={sync.enabled == true}>Sync All Changes to Display Windows</button>--></p>
 <p>New windows are not automatically synced. Sync the windows using the button above when you are ready.</p>
+<h4>Fullscreen</h4>
+<p>Use the button below to enable fullscreen view on your display windows.</p>
+<p><button>Enable Fullscreen</button></p>
