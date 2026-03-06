@@ -15,6 +15,14 @@ button {
   margin: 10px;
 }
 
+form {
+  text-align: center;
+}
+
+.bigInput {
+  width: 80%;
+}
+
 @layer hack-club-theme {
   :root {
     --darker: #121217;

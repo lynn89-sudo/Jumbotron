@@ -5,6 +5,12 @@ export function proccessCity(name) {
     if (name == "nyc") {
         return "NYC";
     }
+    else if (name == "dallas-fort-worth" || name=="dfw") {
+        return "Dallas-Fort Worth";
+    }
+    else if (name == "hanoi") {
+        return "Hà Nội"
+    }
     // Additional special cases can follow; however, I don't think there are others
     else {
         if (name.indexOf("-") == -1) {

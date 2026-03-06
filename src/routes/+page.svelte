@@ -15,4 +15,4 @@
 <p>{"/[city]/display"}</p>
 
 <h2>Testing</h2>
-<p><a href={base+"/nyc/control"}>Control Window</a></p>
+<p><a href={base+"/leafyland/control"}>Control Window</a></p>
