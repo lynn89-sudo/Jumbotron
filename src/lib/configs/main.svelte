@@ -4,6 +4,7 @@
     import { onMount } from "svelte";
 
     import { sync } from "$lib/sync.svelte.js";
+    import { tutorial } from "$lib/sync.svelte.js";
 
     onMount(function() {
        setTimeout(function() {localStorage.setItem("jumbotron.sync", true);}, 1000);
@@ -26,9 +27,9 @@
     }
 </style>
 <h4>Display Windows</h4>
-<p>Display windows should be moved to another screen. Once you are done making changes from this window, you can use the button below to sync all changes.</p>
+{#if tutorial.enabled}<p>Display windows should be moved to another screen.</p>{/if}
 <p><button onclick={openDisplay}>Open New Display Window</button><!--<button onclick={syncDisplay} id="sync" class:disabled={sync.enabled == true}>Sync All Changes to Display Windows</button>--></p>
-<p>New windows are not automatically synced. Sync the windows using the button above when you are ready.</p>
+{#if tutorial.enabled}<p>New windows are not automatically synced. Sync the windows using the buttons for each section below.</p>{/if}
 <h4>Fullscreen</h4>
-<p>Use the button below to enable fullscreen view on your display windows.</p>
+{#if tutorial.enabled}<p>Use the button below to enable fullscreen view on your display windows.</p>{/if}
 <p><button>Enable Fullscreen</button></p>

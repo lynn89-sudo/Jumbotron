@@ -5,6 +5,7 @@
     import { slide } from "svelte/transition";
 
     import { sync } from "$lib/sync.svelte.js";
+    import { tutorial } from "$lib/sync.svelte.js";
 
     let googleLink = $state("");
     let pdfLink = $state("");
@@ -90,18 +91,18 @@
 {#if !mountedEnabled}
 <div transition:slide>
     <h4>Google Slides</h4>
-    <p>To display a Google Slides Presentation on your display windows, go to your Google Slides Presentation, find <i>Publish to Web</i>, copy the link and then paste the link below.</p>
+    {#if tutorial.enabled}<p>To display a Google Slides Presentation on your display windows, go to your Google Slides Presentation, find <i>Publish to Web</i>, copy the link and then paste the link below.</p>{/if}
     <form> 
         <input bind:value={googleLink} class="bigInput" type="url" placeholder="https://docs.google.com/presentation...">
     </form>
     <p><button onclick={enableGoogle} id="google" class:disabled={sync.slides}>Display Google Slides on Display Windows</button></p>
-    <p>Note that your progression through the slides are individual to the display window. Multiple display windows will not progress through the slides together.</p>
+    {#if tutorial.enabled}<p>Note that your progression through the slides are individual to the display window. Multiple display windows will not progress through the slides together.</p>{/if}
     <h4 style:margin-top=10px>PDFs</h4>
-    <p>To display a PDF on your display window, you will need to create a public link to the content. The best way to do this is upload your document to a GitHub repo and copy the raw content link. Once you have the link, past it below.</p>
+    {#if tutorial.enabled}<p>To display a PDF on your display window, you will need to create a public link to the content. The best way to do this is upload your document to a GitHub repo and copy the raw content link. Once you have the link, past it below.</p>{/if}
     <form> 
         <input bind:value={pdfLink} class="bigInput" type="url" placeholder="https://raw.githubusercontent.com/...">
     </form>
-    <p>Note that your progression through the document is individual to the display window, and you will need to use scroll or arrow keys to navigate the document. Multiple display windows will not progress through the document together.</p>
+    {#if tutorial.enabled}<p>Note that your progression through the document is individual to the display window, and you will need to use scroll or arrow keys to navigate the document. Multiple display windows will not progress through the document together.</p>{/if}
     <p><button onclick={enablePdf} id="pdf" class:disabled={sync.slides}>Display PDF on Display Windows</button></p>
 </div>
 {:else}

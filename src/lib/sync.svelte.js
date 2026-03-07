@@ -1,9 +1,8 @@
-export let sync  = $state({
-    enabled: false,
+export const sync  = $state({
     announcements: false,
     slides: false
 })
 
-export let mounted = $state({
+export const tutorial = $state({
     enabled: false
 });

@@ -11,7 +11,7 @@
     import MainConfig from "$lib/configs/main.svelte";
     import AnnouncementConfig from "$lib/configs/announcements.svelte";
     import Slides from "$lib/configs/slides.svelte";
-    import { sync } from "$lib/sync.svelte";
+    import { sync, tutorial } from "$lib/sync.svelte";
 
     onMount(async function() {
         console.log("Checking city name...")
@@ -22,6 +22,15 @@
         window.location.href = base + "/" // this should eventually link to an error page
        }
     })
+
+    function toggleTut() {
+        if (tutorial.enabled) {
+            tutorial.enabled = false;
+        }
+        else {
+            tutorial.enabled = true;
+        }
+    }
     /*
     List of features
     - Set the next event and its time
@@ -71,7 +80,7 @@
 <h1>{proccessEventCity(page.params.city)}</h1>
 <h2 style:font-size=20px style:font-weight=400 style:margin-bottom=30px>Jumbotron Control Panel</h2>
 <p>You should keep this window open on your laptop or main screen, and open the display window on another screen.</p>
-<p style:margin-bottom=40px><button onclick={function() {window.location.href=base+"/" + page.params.city + "/control/guide"}}>How to use Jumbotron</button></p>
+<p style:margin-bottom=40px><button onclick={toggleTut}>{#if tutorial.enabled}Hide Tutorial{:else}Show Tutorial{/if}</button></p>
 <div id="main" class="config">
     <h3>Main Configuration</h3>
     <MainConfig />
