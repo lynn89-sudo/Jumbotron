@@ -1,7 +1,7 @@
 <script>
     import { base } from "$app/paths";
     import { page } from "$app/state";
-    import { onMount } from "svelte";
+    import { onMount, unmount } from "svelte";
     import { slide } from "svelte/transition";
 
     import { sync } from "$lib/sync.svelte.js";
@@ -57,7 +57,7 @@
         localStorage.setItem("jumbotron.pdfLink", "");
         setTimeout(function() {localStorage.setItem("jumbotron.sync", true)}, 2000);
         setTimeout(function() {sync.slides = false; localStorage.setItem("jumbotron.sync", false); document.getElementById("google").disabled = false; mountedEnabled = true;}, 3000)
-        
+        setTimeout(() => {checkLink(localStorage.getItem("jumbotron.googleLink"))}, 3500);
     }
 
     function enablePdf() {
@@ -76,6 +76,14 @@
         mountedEnabled = false;
         setTimeout(function() {localStorage.setItem("jumbotron.sync", true);}, 2000);
         setTimeout(function() {localStorage.setItem("jumbotron.sync", false); sync.slides = false;}, 3000)
+    }
+
+    async function checkLink(link) {
+        let check = await fetch(link);
+        if (!check.ok) {
+            window.alert("Provided link does not work. Link will be unmounted from displays.")
+            unmountDisplay();
+        }
     }
 </script>
 
