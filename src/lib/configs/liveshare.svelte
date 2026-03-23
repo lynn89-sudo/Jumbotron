@@ -5,10 +5,13 @@
     import { slide } from "svelte/transition";
 
     import { eventName } from "$lib/event.js";
+    import { proccessCity } from "$lib/event.js";
 
     import { sync } from "$lib/sync.svelte.js";
     import { tutorial } from "$lib/sync.svelte.js";
+
     import Peer from "peerjs";
+    import DataConnection from "peerjs";
 
     let liveshareEnabled = $state(false);
 
@@ -34,7 +37,14 @@
             //console.log(peer);
             liveshareEnabled = true;
             peerInfo.code = code;
+            peerInfo.connections = 0;
             //console.log(peerInfo);
+        })
+        peer.on("connection", (dataConnection) => {
+            dataConnection.on("open", () => {
+                dataConnection.send(sendPacket());
+                console.log("Sent a packet");
+            })
         })
     }
     function destroyLiveshare() {
@@ -58,6 +68,12 @@
             code += "" + rand;
         }
         return code;
+    }
+
+    function sendPacket() {
+        let packet = {};
+        packet.city = proccessCity(page.params.city);
+        return packet;
     }
 
     async function copyCode() {
