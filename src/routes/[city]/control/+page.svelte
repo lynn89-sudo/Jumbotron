@@ -11,6 +11,7 @@
     import MainConfig from "$lib/configs/main.svelte";
     import AnnouncementConfig from "$lib/configs/announcements.svelte";
     import Slides from "$lib/configs/slides.svelte";
+    import Liveshare from "$lib/configs/liveshare.svelte";
     import { sync, tutorial } from "$lib/sync.svelte";
 
     onMount(async function() {
@@ -120,9 +121,9 @@
     <h3>Presentations</h3>
     <Slides />
 </div>
-<div id="timer" class="config">
-    <h3>Timers</h3>
-    <p>Set a timer and project it onto your display.</p>
+<div id="liveshare" class="config">
+    <h3>Liveshare</h3>
+    <Liveshare />
 </div>
 {#if false}
 <button id="sync" title="Sync Displays" onclick={forceSync}>

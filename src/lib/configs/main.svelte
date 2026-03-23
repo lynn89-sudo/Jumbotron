@@ -7,7 +7,7 @@
     import { tutorial } from "$lib/sync.svelte.js";
 
     onMount(function() {
-        localStorage.setItem("jumbotron.fullscreen", false);
+        localStorage.setItem("jumbotron.error", "");
        setTimeout(function() {localStorage.setItem("jumbotron.sync", true);}, 1000);
        setTimeout(function() {localStorage.setItem("jumbotron.sync", false);}, 2000);
     })

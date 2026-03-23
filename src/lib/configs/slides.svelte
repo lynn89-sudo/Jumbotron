@@ -125,6 +125,9 @@
     button.disabled {
         cursor: progress;
     }
+    h4 {
+        margin-top: 35px;
+    }
 </style>
 {#if !mountedEnabled}
 <div transition:slide>
@@ -135,13 +138,14 @@
     </form>
     <p><button onclick={enableGoogle} id="google" class:disabled={sync.slides}>Display Google Slides on Display Windows</button></p>
     {#if tutorial.enabled}<p>Note that your progression through the slides are individual to the display window. Multiple display windows will not progress through the slides together.</p>{/if}
-    <h4 style:margin-top=10px>Google Drive Files</h4>
+    <h4>Google Drive Files</h4>
     {#if tutorial.enabled}<p>To display a file on your display window, you will need to find your file in Google Drive. From there, enter share and copy the link. Paste that link below.</p>{/if}
     <form> 
         <input bind:value={fileLink} class="bigInput" type="url" placeholder="https://drive.google.com/file...">
     </form>
     {#if tutorial.enabled}<p>Note that your progression through the document is individual to the display window, and you will need to use scroll or arrow keys to navigate the document. Multiple display windows will not progress through the document together.</p>{/if}
     <p><button onclick={enableFile} id="file" class:disabled={sync.slides}>Display File on Display Windows</button></p>
+    <h4>Saved Links</h4>
 </div>
 {:else}
 <div transition:slide>
