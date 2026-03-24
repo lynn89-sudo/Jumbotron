@@ -69,7 +69,7 @@
         bottom: -550px;
         left: 50%;
         transition: all 0.7s ease-in-out;
-        background-color: rgb(177, 82, 82);
+        background-color: rgba(177, 82, 82, 0.948);
         box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.237);
         border-radius: 40px;
         padding: 20px;

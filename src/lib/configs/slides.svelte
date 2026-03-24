@@ -55,8 +55,8 @@
             localStorage.setItem("jumbotron.googleLink", googleLink);
         }
         localStorage.setItem("jumbotron.fileLink", "");
-        setTimeout(function() {localStorage.setItem("jumbotron.sync", true)}, 2000);
-        setTimeout(function() {sync.slides = false; localStorage.setItem("jumbotron.sync", false); document.getElementById("google").disabled = false; mountedEnabled = true;}, 3000)
+        setTimeout(function() {localStorage.setItem("jumbotron.sync", true); sync.liveshare = true;}, 2000);
+        setTimeout(function() {sync.slides = false; localStorage.setItem("jumbotron.sync", false); sync.liveshare = false; document.getElementById("google").disabled = false; mountedEnabled = true;}, 3000)
         setTimeout(() => {checkLink(localStorage.getItem("jumbotron.googleLink"), "google")}, 3500);
     }
 
@@ -67,8 +67,8 @@
         let split = fileLink.split("/");
         let link = `https://drive.google.com/file/d/${split[5]}/preview`
         localStorage.setItem("jumbotron.fileLink", link);
-        setTimeout(function() {localStorage.setItem("jumbotron.sync", true)}, 2000);
-        setTimeout(function() {sync.slides = false; localStorage.setItem("jumbotron.sync", false); document.getElementById("file").disabled = false; mountedEnabled = true;}, 3000)
+        setTimeout(function() {localStorage.setItem("jumbotron.sync", true); sync.liveshare = true;}, 2000);
+        setTimeout(function() {sync.slides = false; localStorage.setItem("jumbotron.sync", false); sync.liveshare = false; document.getElementById("file").disabled = false; mountedEnabled = true;}, 3000)
         setTimeout(() => {checkLink(fileLink, "file")}, 3500);
     }
 
@@ -77,8 +77,8 @@
         localStorage.setItem("jumbotron.googleLink", "");
         localStorage.setItem("jumbotron.fileLink", "");
         mountedEnabled = false;
-        setTimeout(function() {localStorage.setItem("jumbotron.sync", true);}, 2000);
-        setTimeout(function() {localStorage.setItem("jumbotron.sync", false); sync.slides = false;}, 3000)
+        setTimeout(function() {localStorage.setItem("jumbotron.sync", true); sync.liveshare = true;}, 2000);
+        setTimeout(function() {localStorage.setItem("jumbotron.sync", false); sync.slides = false; sync.liveshare = false;}, 3000)
     }
 
     async function checkLink(link, type) {

@@ -3,12 +3,13 @@
     import { page } from "$app/state";
     import { onMount } from "svelte";
     import { slide } from "svelte/transition";
+    import { untrack } from "svelte";
 
     import { eventName } from "$lib/event.js";
     import { proccessCity } from "$lib/event.js";
 
     import { sync } from "$lib/sync.svelte.js";
-    import { tutorial } from "$lib/sync.svelte.js";
+    import { tutorial } from "$lib/sync.svelte.js"
 
     import Peer from "peerjs";
     import DataConnection from "peerjs";
@@ -20,6 +21,7 @@
     let peer;
     let tries = 3;
     let peerInfo = $state({});
+    let activeConnections = $state([]);
 
     function enableLiveshare() {
         let code = codeGen();
@@ -39,7 +41,7 @@
             //console.log(peer);
             liveshareEnabled = true;
             peerInfo.code = code;
-            peerInfo.connections = 0;
+            //peerInfo.connections = 0;
             peerInfo.packetsSent = 0;
             //console.log(peerInfo);
         })
@@ -47,15 +49,24 @@
             dataConnection.on("open", () => {
                 if (blockConnections) {
                     dataConnection.close();
-                    peerInfo.connections++;
+                    //peerInfo.connections++;
                 }
                 else {
                     dataConnection.send(sendPacket());
-                    peerInfo.connections++;
+                    activeConnections.push(dataConnection);
+                    //peerInfo.connections++;
                 }
             })
             dataConnection.on("close", () => {
-                peerInfo.connections--;
+                //peerInfo.connections--;
+                activeConnections = activeConnections.filter((connection) => connection != dataConnection);
+            })
+            dataConnection.on("data", (data) => {
+                if (data == "poll") {
+                    if (!blockPings) {
+                        dataConnection.send(sendPacket());
+                    }
+                }
             })
         })
     }
@@ -85,12 +96,41 @@
     function sendPacket() {
         let packet = {};
         packet.city = proccessCity(page.params.city);
-        packet.event = {};
-        packet.event.label = localStorage.getItem("jumbotron.event.label");
-        packet.event.time = localStorage.getItem("jumbotron.event.time");
+        if (localStorage.getItem("jumbotron.event.label") != "" && localStorage.getItem("jumbotron.event.time") != "undefined") {
+            packet.event = {};
+            packet.event.label = localStorage.getItem("jumbotron.event.label");
+            packet.event.time = localStorage.getItem("jumbotron.event.time");
+        }
+        if (localStorage.getItem("jumbotron.announcement.title") != "" && localStorage.getItem("jumbotron.event.message") != "") {
+            packet.announcement = {};
+            packet.announcement.title = localStorage.getItem("jumbotron.announcement.title");
+            packet.announcement.message = localStorage.getItem("jumbotron.announcement.message");
+        }
+        if (localStorage.getItem("jumbotron.googleLink") != "") {
+            packet.presentation = localStorage.getItem("jumbotron.googleLink");
+        }
+        else if (localStorage.getItem("jumbotron.fileLink") != "") {
+            packet.presentation = localStorage.getItem("jumbotron.fileLink");
+        }
         peerInfo.packetsSent++;
         return packet;
     }
+
+    $effect(() => {
+        if (sync.liveshare) {
+            untrack(() => {
+                if (blockPings) {
+                    return;
+                }
+                for (let i = 0; i < activeConnections.length; i++) {
+                    let connection = activeConnections[i];
+                    connection.send(sendPacket());
+                }
+            })
+                
+            //console.log(activeConnections);
+        }
+    })
 
     async function copyCode() {
         await navigator.clipboard.writeText(peerInfo.code);   
@@ -166,8 +206,8 @@
     <h5 style:font-size=30px>{peerInfo.code} <button onclick={copyCode} class="copy"><span translate="no" class="material-symbols-outlined">file_copy</span></button></h5>
     {#if tutorial.enabled}<p>Participants should use this code to view information on their device; you might want to copy this code into an announcement. If your liveshare restarts, this code will likely change.</p>{/if}
     <h4>Monitor</h4>
-    <p>Current connections: <span class="monitor">{peerInfo.connections}</span></p>
+    <p>Current connections: <span class="monitor">{activeConnections.length}</span></p>
     <p>Information pings: <span class="monitor">{peerInfo.packetsSent}</span></p>
-    <p>{#if !blockConnections}<button onclick={() => {toggle("connections")}}>Block New Connections</button>{:else}<button onclick={() => {toggle("connections")}}>Unblock New Connections</button>{/if} {#if !blockPings}<button onclick={() => {toggle("pings")}}>Block Information Pings</button>{:else}<button onclick={() => {toggle("pings")}}>Unblock Information Pings</button>{/if}</p>
+    <p>{#if !blockConnections}<button onclick={() => {toggle("connections")}}>Block New Connections</button>{:else}<button onclick={() => {toggle("connections")}}>Unblock New Connections</button>{/if} {#if !blockPings}<button onclick={() => {toggle("pings")}}>Halt Information Pings</button>{:else}<button onclick={() => {toggle("pings")}}>Resume Information Pings</button>{/if}</p>
     {/if}
 </div>

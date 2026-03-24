@@ -19,31 +19,43 @@
     let peer;
     let dataConnection;
 
+    let pong = "";
+
     let packet = $state({});
 
     let inputtedId = $state("");
 
     function connectToEvent() {
+        event.preventDefault();
         console.log("Attempting connection");
         peer = new Peer();
         peer.on("open", () => {
             dataConnection = peer.connect(`hackclub${eventName}${inputtedId}`);
             dataConnection.on("error", (err) => {
                 console.log(err.type);
+                if (err.type == "not-open-yet") {
+                    //clearInterval(pong);
+                    console.log("Peer not found");
+                }
             })
             dataConnection.on("open", () => {
                 console.log("Connection established");
                 mode = 1;
             })
             dataConnection.on("close", () => {
+                //clearInterval(pong);
                 console.log("Connection closed");
+                window.alert("The connection to your event's Jumbotron has been lost. If you think this was a mistake, please ask for help.")
                 mode = 0;
             })
             dataConnection.on("data", (data) => {
-                console.log("Recieved packet");
+                console.log("Received packet");
                 console.log(data);
                 packet = data;
             })
+            /*pong = setInterval(() => {
+                dataConnection.send("poll");
+            }, 7000)*/
         })
     }
 </script>
@@ -74,6 +86,13 @@
 {#if mode == 1}
 <div in:fly={{y:-200, delay:1000}} out:fly={{y:-200}} style:margin-top=20px>
     <p>Welcome to</p>
-    <h1 style:margin-top=0px>{eventName} {packet.city}</h1>
+    <h1 style:margin-top=0px style:margin-bottom=40px>{eventName} {packet.city}</h1>
 </div>
+{#if packet.presentation != null}
+<div in:slide={{delay: 2000}} out:slide>
+    <h2>A presentation is currently being displayed on the Jumbotron</h2>
+    <p>You can follow along by clicking the button</p>
+    <p><a href={packet.presentation} target="_blank"><button>View Content</button></a></p>
+</div>
+{/if}
 {/if}

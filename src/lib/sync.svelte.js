@@ -1,6 +1,7 @@
 export const sync  = $state({
     announcements: false,
-    slides: false
+    slides: false,
+    liveshare: false
 })
 
 export const tutorial = $state({

@@ -62,6 +62,7 @@
     }
 
     onMount(function() {
+        /*
         if (localStorage.getItem("jumbotron.announcement.title") == null || localStorage.getItem("jumbotron.announcement.message") == null) {
             localStorage.setItem("jumbotron.announcement.title", "");
             localStorage.setItem("jumbotron.announcement.message", "");
@@ -71,6 +72,12 @@
             localStorage.setItem("jumbotron.event.time", "");
             localStorage.setItem("jumbotron.event.label", "");
         }
+            */
+           localStorage.setItem("jumbotron.announcement.title", "");
+            localStorage.setItem("jumbotron.announcement.message", "");
+            localStorage.setItem("jumbotron.event.title", "");
+            localStorage.setItem("jumbotron.event.time", "");
+            localStorage.setItem("jumbotron.event.label", "");
     })
 
 
@@ -170,8 +177,8 @@
             localStorage.setItem("jumbotron.event.time", "");
             localStorage.setItem("jumbotron.event.label", "");
         }
-        setTimeout(function() {localStorage.setItem("jumbotron.sync", true)}, 2000);
-        setTimeout(function() {sync.announcements = false; localStorage.setItem("jumbotron.sync", false)}, 3000);
+        setTimeout(function() {localStorage.setItem("jumbotron.sync", true); sync.liveshare = true;}, 2000);
+        setTimeout(function() {sync.announcements = false; localStorage.setItem("jumbotron.sync", false); sync.liveshare = false}, 3000);
     }
 
     function setAlarm() {
