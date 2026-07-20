@@ -50,8 +50,16 @@
                 console.log("Cleared event");
             }
             else {
-                event = [localStorage.getItem("jumbotron.event.title"), localStorage.getItem("jumbotron.event.label")]
-                console.log("Synced event");
+                if (event[1] == "Now") {
+                    setTimeout(() => {
+                        event = [localStorage.getItem("jumbotron.event.title"), localStorage.getItem("jumbotron.event.label")]
+                    console.log("Synced event");
+                    }, 1000);
+                }
+                else {
+                    event = [localStorage.getItem("jumbotron.event.title"), localStorage.getItem("jumbotron.event.label")]
+                    console.log("Synced event");
+                }
             }
             
             if (localStorage.getItem("jumbotron.announcement.title") == "" && localStorage.getItem("jumbotron.announcement.message") == "") {
@@ -137,6 +145,7 @@
         left: 50%;
         width: 40%;
         top: 70px;
+        font-size: 25px;
 
         #timeLabel {
             border-radius: 30px;
@@ -176,12 +185,13 @@
         z-index: 1000;
         h1 {
                 font-family: VAG Rounded Next Shine;
+                font-size: 50px;
             }
 
         div {
             p {
                 color: rgb(255, 255, 255);
-                font-size: 20px;
+                font-size: 30px;
                 font-family: Poppins
             }
         }
@@ -266,11 +276,11 @@
         left: 50%;
         opacity: 1;
         z-index: 998;
-        transition: top 2s ease-in-out;
+        transition: top 2.5s ease-in-out;
         transition-delay: 2s;
     }
     #wave.hide {
-        top: -100%;
+        top: -150%;
     }
 
     #logo {
@@ -300,7 +310,7 @@
     #shark {
         position: fixed;
         transform: translate(-50%, -50%);
-        left: 63%;
+        left: 67%;
         top: 100px;
         z-index: 1000;
         height: 10%;
@@ -309,7 +319,7 @@
     #ray2 {
         position: fixed;
         transform: translate(-50%, -50%);
-        left: 35%;
+        left: 32.5%;
         top: 45px;
         z-index: 1000;
         height: 10%;
