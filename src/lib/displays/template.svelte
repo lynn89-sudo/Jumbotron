@@ -50,8 +50,16 @@
                 console.log("Cleared event");
             }
             else {
-                event = [localStorage.getItem("jumbotron.event.title"), localStorage.getItem("jumbotron.event.label")]
-                console.log("Synced event");
+                if (event[1] == "Now") {
+                    setTimeout(() => {
+                        event = [localStorage.getItem("jumbotron.event.title"), localStorage.getItem("jumbotron.event.label")]
+                    console.log("Synced event");
+                    }, 1000);
+                }
+                else {
+                    event = [localStorage.getItem("jumbotron.event.title"), localStorage.getItem("jumbotron.event.label")]
+                    console.log("Synced event");
+                }
             }
             
             if (localStorage.getItem("jumbotron.announcement.title") == "" && localStorage.getItem("jumbotron.announcement.message") == "") {
