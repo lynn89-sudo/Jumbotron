@@ -11,6 +11,14 @@
     let screenY = $state(0);
     let screenX = $state(0);
 
+    let editable = $state(false);
+    onMount(() => {
+        if (sessionStorage.getItem("edit") != null) {
+            editable = true;
+            event = ["Click here to edit title", "12:00PM"]
+        }
+    })
+
     onMount(async function() {
         console.log("Checking city name...")
        if (await checkCity(proccessCity(page.params.city)) == true) {
@@ -24,6 +32,9 @@
     onMount(() => {
         window.addEventListener("keypress", (e) => {
             if (e.key == "f") {
+                if (editable) {
+                    return;
+                }
                 document.documentElement.requestFullscreen();
                 requestWakeLock();
             }
@@ -43,6 +54,9 @@
     })
 
     function sync(override) {
+        if (editable) {
+            return;
+        }
         if (localStorage.getItem("jumbotron.sync") == "true" || override) {
             console.log("Started display sync");
             if (localStorage.getItem("jumbotron.event.title") == "" || localStorage.getItem("jumbotron.event.time") == "undefined" || localStorage.getItem("jumbotron.event.time") == "") {

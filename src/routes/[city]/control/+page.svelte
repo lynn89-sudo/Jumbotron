@@ -31,6 +31,7 @@
         else {
             sessionStorage.removeItem("authCode");
         }
+        sessionStorage.removeItem("edit");
     })
 
     onMount(async function() {
@@ -93,6 +94,8 @@
     });
 
     onMount(() => {requestWakeLock();})
+
+    let oneScreen = $state(null);
 </script>
 
 <svelte:head>
@@ -226,10 +229,19 @@
 <h1>{proccessEventCity(page.params.city)}</h1>
 <h2 style:font-size=20px style:font-weight=400 style:margin-bottom=30px>Jumbotron Control Panel</h2>
 <svg style="display: block; margin: 0 auto" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414" xmlns="http://www.w3.org/2000/svg" aria-label="admin" viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="100" height="100"><path d="M21.437 17.023a1 1 0 0 1 .785.977v2.2H23a1 1 0 0 1 .907 1.42l-2.222 4.8a1 1 0 0 1-1.907-.42v-2.2H19a1 1 0 0 1-.907-1.42l2.222-4.8a1 1 0 0 1 1.122-.557zM19.834 16.977C20.714 16.173 21 14.873 21 13a5 5 0 0 0-10 0c0 1.873.286 3.173 1.165 3.977a8.029 8.029 0 0 0-3.6 4.062c-.162.408-.213.939.162 1.168.792.485 1.632-.457 2.105-1.257a5.997 5.997 0 0 1 5.48-2.942c1.132.058 2.373-.055 3.24-.784a8.75 8.75 0 0 0 .282-.247zM19 13c0 1.683-.271 2.241-.47 2.456-.162.176-.68.544-2.53.544-1.85 0-2.368-.368-2.53-.544C13.27 15.24 13 14.683 13 13a3 3 0 1 1 6 0z"/></svg>
+{#if oneScreen == null}
+<div class="config">
+    <h3>Choose Mode</h3>
+    <p>Information is changed directly on the display for one-screen mode and from a console for two-screen mode.</p>
+    <p><strong>Important note: Liveshare and presentations (Google Drive and YouTube) do not currently work for one-screen mode.</strong></p>
+
+    <p><button onclick={() => {sessionStorage.setItem("edit", true); window.location.href = base + "/" + page.params.city + "/display"}} style="border-color: #8f432d; background-color: #ec3750" class="bigButton" title="One-Screen Mode"><span class="material-symbols-outlined" translate="no">desktop_mac</span></button> <button style="border-color: #8f432d; background-color: #ec3750" class="bigButton" title="Two-Screen Mode" onclick={() => {oneScreen = false; sessionStorage.removeItem("edit")}}><span class="material-symbols-outlined" translate="no">select_window</span></button></p>
+</div>
+{:else if oneScreen == false}
 <p>You should keep this window open on your laptop or main screen, and open the display window on another screen.</p>
 <p>Jumbotron will not work across different browsers (ie. Safari, Chrome)</p>
 <!--<p style:margin-bottom=40px><button onclick={toggleTut}>{#if tutorial.enabled}Hide Tutorial{:else}Show Tutorial{/if}</button></p>-->
-<p style:margin-bottom=40px><button onclick={window.location.href = base + "/"}>Return to Landing Page</button></p>
+<p style:margin-bottom=40px><button onclick={window.location.href = base + "/"}>Return to Landing Page</button> <button onclick={() => {sessionStorage.setItem("edit", true); window.location.href = base + "/" + page.params.city + "/display"}}>Change Mode</button></p>
 
 <div id="main" class="config">
     <h3>Main Configuration</h3>
@@ -260,3 +272,4 @@
 <div id="syncingNotif" class:active={sync.enabled || sync.announcements || sync.slides}>
     <p style:color="white"><strong><span translate="no" class="material-symbols-outlined">sync</span></strong></p>
 </div>
+{/if}

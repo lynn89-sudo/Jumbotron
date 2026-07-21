@@ -7,9 +7,22 @@
     import { eventName, proccessEventCity } from "$lib/event.js";
     import { proccessCity } from "$lib/event.js";
     import { checkCity } from "$lib/event.js";
+    import Announcements from "$lib/configs/announcements.svelte";
 
     let screenY = $state(0);
     let screenX = $state(0);
+
+    let editable = $state(false);
+    onMount(() => {
+        if (sessionStorage.getItem("edit") != null) {
+            editable = true;
+            event = []
+            announcement = ["Click here to edit title", "Message"];
+        }
+        else {
+            editable = false;
+        }
+    })
 
     onMount(async function() {
         console.log("Checking city name...")
@@ -24,6 +37,9 @@
     onMount(() => {
         window.addEventListener("keypress", (e) => {
             if (e.key == "f") {
+                if (editable) {
+                    return;
+                }
                 document.documentElement.requestFullscreen();
                 requestWakeLock();
             }
@@ -43,6 +59,9 @@
     })
 
     function sync(override) {
+        if (editable) {
+            return;
+        }
         if (localStorage.getItem("jumbotron.sync") == "true" || override) {
             console.log("Started display sync");
             if (localStorage.getItem("jumbotron.event.title") == "" || localStorage.getItem("jumbotron.event.time") == "undefined" || localStorage.getItem("jumbotron.event.time") == "") {
@@ -126,6 +145,9 @@
     });
 
     let announcementOut = $state(true);
+
+    let eventBoxWidth  = $state(0);
+
 </script>
 <style>
     @font-face {
@@ -143,7 +165,7 @@
         position: fixed;
         transform: translate(-50%, -50%);
         left: 50%;
-        width: 40%;
+        min-width: 40%;
         top: 70px;
         font-size: 25px;
 
@@ -176,7 +198,7 @@
         position: fixed;
         transform: translate(-50%, -50%);
         left: 50%;
-        top: 30%;
+        top: 40%;
         color: white;
         background-color: #0E387A;
         width: 90%;
@@ -192,7 +214,10 @@
             p {
                 color: rgb(255, 255, 255);
                 font-size: 30px;
-                font-family: Poppins
+                font-family: Poppins;
+                span {
+                    padding: 10px;
+                }
             }
         }
 
@@ -310,7 +335,6 @@
     #shark {
         position: fixed;
         transform: translate(-50%, -50%);
-        left: 67%;
         top: 100px;
         z-index: 1000;
         height: 10%;
@@ -319,10 +343,21 @@
     #ray2 {
         position: fixed;
         transform: translate(-50%, -50%);
-        left: 32.5%;
         top: 45px;
         z-index: 1000;
         height: 10%;
+    }
+
+    #floatBar {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        z-index: 1002;
+
+        button {
+            background-color: #961526e1;
+            border-color: #ec3750;
+        }
     }
 </style>
 <svelte:window bind:innerHeight={screenY} bind:innerWidth={screenX}></svelte:window>
@@ -333,18 +368,17 @@
 <img src="{base}/images/sunbeam/blanket.png" alt="Blanket design" id="blanket"/>
 <img src="{base}/images/sunbeam/ocean.png" alt="Wave" id="wave" class:hide={event[1] != "Now" && announcementOut}/>
 {#if event.length > 0}
-<div id="event" class:now={event[1] == "Now"} transition:slide>
-    <p><strong>{event[0]}</strong> <span id="timeLabel">{event[1]}</span></p>
+<div id="event" class:now={event[1] == "Now"} transition:slide bind:clientWidth={eventBoxWidth}>
+    <p><strong contenteditable={editable}>{event[0]}</strong> <span id="timeLabel" contenteditable={editable}>{event[1]}</span></p>
 </div>
 {/if}
 {#if announcementOut == false}
 <div id="announcement-smoke" in:fade out:fade={{delay: 1000}}></div>
 <div id="announcement" in:fly={{y:400, duration:1500, delay: 1000}} out:fly={{y:-400, duration:1500}}>
-    {#if announcement[0] != ""}<h1 class:margin-down={announcement[1] == ""}>{announcement[0]}</h1>{/if}
-    <!--<span class="material-symbols-outlined">circle_notifications</span>-->
-    {#if announcement[1] != ""}
+    {#if announcement[0] != "" || editable}<h1 class:margin-down={announcement[1] == "" || editable} contenteditable={editable}>{announcement[0]}</h1>{/if}
+    {#if announcement[1] != "" && !editable}
     <div>
-        <p>{announcement[1]}</p>
+        <p><span contenteditable={editable}>{announcement[1]}</span></p>
     </div>
     {/if}
 </div>
@@ -361,7 +395,16 @@
     <h1 class:hide={!announcementOut}>{proccessCity(page.params.city)}</h1>
 </div>
 <img src="{base}/images/sunbeam/ray.png" alt="Stingray" id="ray"/>
-{#if event.length != 0}<img transition:blur={{delay: 500}} src="{base}/images/sunbeam/shark.png" alt="Shark" id="shark" /> <img transition:blur={{delay: 500}} src="{base}/images/sunbeam/ray 2.png" alt="Stingray" id="ray2" />{/if}
+{#if event.length != 0}<img transition:blur={{delay: 500}} src="{base}/images/sunbeam/shark.png" style:left={(innerWidth/2) + (eventBoxWidth/2) + 10}px alt="Shark" id="shark" /> <img transition:blur={{delay: 500}} src="{base}/images/sunbeam/ray 2.png" alt="Stingray" id="ray2" style:right={(innerWidth/2) + (eventBoxWidth/2) - 100}px/>{/if}
 <!--<div id="eventNameDisplay">
     <h1><span>{eventName}</span><br>{proccessCity(page.params.city)}</h1>
 </div>-->
+{#if editable}
+<div id="floatBar">
+    <p>
+        <button title="Toggle Announcements" onclick={() => {announcementOut ? announcementOut = false : announcementOut = true}} class="bigButton"><span class="material-symbols-outlined" translate="no">campaign</span></button>
+        <button title="Toggle Event" onclick={() => {event.length == 0 ? event = ["Click here to edit title", "12:00PM"] : event = []}} class="bigButton"><span class="material-symbols-outlined" translate="no">calendar_add_on</span></button>
+        <button title="Enter Fullscreen" onclick={() => {document.documentElement.requestFullscreen(); requestWakeLock();}} class="bigButton"><span class="material-symbols-outlined" translate="no">fullscreen</span></button>
+    </p>
+</div>
+{/if}
